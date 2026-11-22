@@ -40,7 +40,14 @@ def main() -> int:
     out_path = os.path.join(out_dir, "entry.txt")
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(text)
-    print(f"wrote {chars} characters to {out_path}")
+    # Read the file back and verify the round trip: what the judge
+    # reads must be byte-for-byte the text checked above.
+    with open(out_path, "r", encoding="utf-8") as f:
+        written = f.read()
+    if written != text:
+        print("round-trip mismatch: file differs from entry text", file=sys.stderr)
+        return 1
+    print(f"wrote {chars} characters to {out_path} (verified)")
     return 0
 
 
